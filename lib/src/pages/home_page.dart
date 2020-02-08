@@ -41,24 +41,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Expanded(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Search',
-                        labelStyle: TextStyle(
-                          color: Colors.black,
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
                           fontSize: 12.0,
                         ),
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Icon(
-                    Icons.mic,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
+                  // SizedBox(
+                  //   width: 8.0,
+                  // ),
+                  // Icon(
+                  //   Icons.mic,
+                  //   color: Colors.white,
+                  // ),
+                  // SizedBox(
+                  //   width: 8.0,
+                  // ),
                 ],
               ),
             ),
