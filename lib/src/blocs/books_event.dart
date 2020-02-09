@@ -6,3 +6,11 @@ abstract class BooksEvent extends Equatable {
 }
 
 class Fetch extends BooksEvent {}
+
+class Filter extends BooksEvent {
+  final String data;
+
+  Filter(this.data);
+}
+
+class ResetFetchData extends BooksEvent {}

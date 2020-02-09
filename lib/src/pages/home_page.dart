@@ -53,15 +53,16 @@ class _HomePageState extends State<HomePage>
                     }
                     if (state is BooksError) {
                       return Center(
-                        child: Text('failed to fetch posts'),
+                        child: Text('failed to fetch books'),
                       );
                     }
                     if (state is BooksLoaded) {
                       if (state.books.isEmpty) {
                         return Center(
-                          child: Text('no posts'),
+                          child: Text('no books'),
                         );
                       }
+
                       return GridView.builder(
                         physics: BouncingScrollPhysics(),
                         padding: EdgeInsets.only(
@@ -117,6 +118,13 @@ class _HomePageState extends State<HomePage>
                         ),
                         border: InputBorder.none,
                       ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          _booksBloc.add(Filter(value));
+                        } else {
+                          _booksBloc.add(ResetFetchData());
+                        }
+                      },
                     ),
                   ),
                 ],

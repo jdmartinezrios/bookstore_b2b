@@ -36,11 +36,11 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
   @override
   Stream<BooksState> mapEventToState(BooksEvent event) async* {
     final currentState = state;
-    
+
     if (event is Fetch && !_hasReachedMax(currentState)) {
       try {
         if (currentState is BooksUninitialized) {
-          final books = await _fetchBooks(0, 20);
+          final books = await _fetchBooks(0, 10);
           yield BooksLoaded(books: books, hasReachedMax: false);
           return;
         }
@@ -51,6 +51,37 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
               ? currentState.copyWith(hasReachedMax: true)
               : BooksLoaded(
                   books: currentState.books + books,
+                  hasReachedMax: false,
+                );
+        }
+      } catch (e) {
+        print(e);
+        yield BooksError();
+      }
+    }
+    if (event is ResetFetchData && !_hasReachedMax(currentState)) {
+      try {
+        if (currentState is BooksLoaded) {
+          page = 1;
+          final books = await _fetchBooks(0, 10);
+          yield BooksLoaded(books: books, hasReachedMax: false);
+          return;
+        }
+      } catch (e) {
+        print(e);
+        yield BooksError();
+      }
+    }
+
+    if (event is Filter && !_hasReachedMax(currentState)) {
+      try {
+        if (currentState is BooksLoaded) {
+          page = 1;
+          final books = await _filterBooksPerPage(event.data);
+          yield books.isEmpty
+              ? currentState.copyWith(hasReachedMax: true)
+              : BooksLoaded(
+                  books: books,
                   hasReachedMax: false,
                 );
         }
@@ -71,7 +102,7 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
       var _books = data['books'] as List;
       return _books.map((rawBooks) {
         return Books(
-          id: rawBooks['id'],
+          id: rawBooks['isbn13'],
           title: rawBooks['title'],
           subtitle: rawBooks['subtitle'],
           isbn13: rawBooks['isbn13'],
@@ -92,7 +123,28 @@ class BooksBloc extends Bloc<BooksEvent, BooksState> {
       var _books = data['books'] as List;
       return _books.map((rawBooks) {
         return Books(
-          id: rawBooks['id'],
+          id: rawBooks['isbn13'],
+          title: rawBooks['title'],
+          subtitle: rawBooks['subtitle'],
+          isbn13: rawBooks['isbn13'],
+          price: rawBooks['price'],
+          image: rawBooks['image'],
+          url: rawBooks['url'],
+        );
+      }).toList();
+    } else {
+      throw Exception('error fetching books per page');
+    }
+  }
+
+  Future<List<Books>> _filterBooksPerPage(String title) async {
+    final response = await httpClient.get(api.apiFilter + title);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      var _books = data['books'] as List;
+      return _books.map((rawBooks) {
+        return Books(
+          id: rawBooks['isbn13'],
           title: rawBooks['title'],
           subtitle: rawBooks['subtitle'],
           isbn13: rawBooks['isbn13'],

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Books extends Equatable {
-  final int id;
+  final String id;
   final String title;
   final String subtitle;
   final String isbn13;
@@ -36,8 +36,23 @@ class Books extends Equatable {
   });
 
   @override
-  List<Object> get props => [id, title, subtitle, isbn13, price, image, url];
+  List<Object> get props => [
+        id,
+        title,
+        subtitle,
+        isbn13,
+        price,
+        image,
+        url,
+        authors,
+        publisher,
+        isbn10,
+        pages,
+        year,
+        rating,
+        desc
+      ];
 
   @override
-  String toString() => 'Books { id: $id }';
+  String toString() => 'Books { id: $id}';
 }
