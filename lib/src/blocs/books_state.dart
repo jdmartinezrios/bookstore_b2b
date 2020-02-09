@@ -1,5 +1,6 @@
-import 'package:bookstore/src/models/books.dart';
 import 'package:equatable/equatable.dart';
+
+import 'package:bookstore/src/models/books.dart';
 
 abstract class BooksState extends Equatable {
   const BooksState();
@@ -8,17 +9,20 @@ abstract class BooksState extends Equatable {
   List<Object> get props => [];
 }
 
-class BooksUnitialized extends BooksState {}
+class BooksUninitialized extends BooksState {}
 
 class BooksError extends BooksState {}
 
 class BooksLoaded extends BooksState {
-  final List<Books> books; 
+  final List<Books> books;
   final bool hasReachedMax;
 
-  const BooksLoaded({this.books, this.hasReachedMax});
+  const BooksLoaded({
+    this.books,
+    this.hasReachedMax,
+  });
 
- BooksLoaded copyWith({
+  BooksLoaded copyWith({
     List<Books> books,
     bool hasReachedMax,
   }) {
@@ -33,5 +37,5 @@ class BooksLoaded extends BooksState {
 
   @override
   String toString() =>
-      'PostLoaded { books: ${books.length}, hasReachedMax: $hasReachedMax }';
+      'BooksLoaded { posts: ${books.length}, hasReachedMax: $hasReachedMax }';
 }
